@@ -1,30 +1,7 @@
 language: php
 php:
-  - 7.0
-  - 7.1
-  - 7.2
-  - 7.3
-  - 7.4
   - nightly
 env: CC=gcc
-matrix:
-  allow_failures:
-    - php: 7.3
-      env: CC=clang
-    - php: 7.4
-      env: CC=clang
-    - php: nightly
-  include:
-    - php: 7.0
-      env: CC=clang
-    - php: 7.1
-      env: CC=clang
-    - php: 7.2
-      env: CC=clang
-    - php: 7.3
-      env: CC=clang
-    - php: 7.4
-      env: CC=clang
 addons:
   apt:
     update: true
@@ -46,6 +23,7 @@ before_install:
   - ./configure $CFGARGS
 install: make install
 before_script:
+  - phpdismod -s cli xdebug
   - mkdir -p tests/nodes/ && echo > tests/nodes/nodemap
   - redis-server --port 0 --daemonize yes --aclfile tests/users.acl --unixsocket /tmp/redis.sock
   - for PORT in $(seq 6379 6382) $(seq 32767 32769); do redis-server --port $PORT --daemonize yes --aclfile tests/users.acl; done
